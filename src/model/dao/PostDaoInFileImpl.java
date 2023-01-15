@@ -1,10 +1,12 @@
 package model.dao;
 
 import model.Post;
+import model.User;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PostDaoInFileImpl implements PostDao {
     private final String fileName;
@@ -40,5 +42,17 @@ public class PostDaoInFileImpl implements PostDao {
         return posts.stream()
                 .filter(post -> post.getId() == id)
                 .findFirst().orElseThrow();
+    }
+
+    @Override
+    public List<Post> findByUser(User user) {
+        return posts.stream()
+                .filter(p -> p.getUser().getId() == user.getId())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void savePost(Post post) {
+        posts.add(post);
     }
 }

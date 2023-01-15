@@ -60,8 +60,14 @@ public class UserDaoInFileImpl implements UserDao{
 
     @Override
     public boolean auth(User user) {
-        return users.stream()
-                .anyMatch(u -> u.getNickname().equals(user.getNickname())
-                        && u.getPassword().equals(user.getPassword()));
+        Optional<User> existingUser = users.stream()
+                    .filter(u -> u.getNickname().equals(user.getNickname())
+                            && u.getPassword().equals(user.getPassword())).findAny();
+
+        if(existingUser.isPresent()) {
+            user.setId(existingUser.get().getId());
+            return true;
+        }
+        return false;
     }
 }
